@@ -5,6 +5,7 @@
  *
  *   npm run logo:preparar -- --arquivo "C:\caminho\logo.png" [--nome "Flavia Melo"] [--tagline "Makeup artist"]
  *   npm run logo:preparar -- --arquivo logo.png --so-previa      (só gera as prévias em .data/logo/)
+ *   --ate-y 966     ignora tudo abaixo dessa linha da imagem (ex.: remover um slogan pequeno demais)
  *
  * Com --so-previa nada é gravado no banco. Sem ele, as versões são salvas no banco
  * (DATABASE_URL) e aplicadas nas configurações do estúdio.
@@ -27,6 +28,7 @@ if (!file || !fs.existsSync(file)) {
 const tolerance = Number(arg("tolerancia") ?? 26); // distância de cor considerada "fundo"
 const soft = 34; // faixa de transição suave nas bordas
 const onlyPreview = process.argv.includes("--so-previa");
+const untilY = arg("ate-y") ? Number(arg("ate-y")) : Infinity;
 
 const { data, info } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 const { width: W, height: H } = info;
@@ -42,7 +44,7 @@ const bg = [median(0), median(1), median(2)];
 
 const out = Buffer.alloc(W * H * 4);
 let minX = W, minY = H, maxX = 0, maxY = 0;
-for (let y = 0; y < H; y++) {
+for (let y = 0; y < Math.min(H, untilY); y++) {
   for (let x = 0; x < W; x++) {
     const i = px(x, y);
     const r = data[i], g = data[i + 1], b = data[i + 2];
@@ -70,15 +72,17 @@ if (maxX <= minX) {
 const pad = Math.round(Math.max(maxX - minX, maxY - minY) * 0.03);
 const crop = { left: Math.max(0, minX - pad), top: Math.max(0, minY - pad), width: Math.min(W, maxX + pad) - Math.max(0, minX - pad), height: Math.min(H, maxY + pad) - Math.max(0, minY - pad) };
 
-// Versão clara: mesma forma e transparência, cores levadas a tons de off-white rosado
+// Versão clara (para vidro/fundos escuros) em DOIS TONS, espelhando a original:
+// partes escuras (vinho) viram quase branco; partes médias/claras (rosé, traços) viram rosé-dourado claro.
 const light = Buffer.from(out);
+const ink = [253, 244, 242]; // off-white rosado
+const gold = [242, 196, 184]; // rosé-dourado claro
 for (let i = 0; i < light.length; i += 4) {
   if (!light[i + 3]) continue;
   const lum = (0.2126 * light[i] + 0.7152 * light[i + 1] + 0.0722 * light[i + 2]) / 255;
-  const t = 0.78 + lum * 0.18; // mantém um leve contraste entre partes escuras e claras
-  light[i] = Math.round(light[i] * (1 - t) + 251 * t);
-  light[i + 1] = Math.round(light[i + 1] * (1 - t) + 236 * t);
-  light[i + 2] = Math.round(light[i + 2] * (1 - t) + 238 * t);
+  const t = Math.max(0, Math.min(1, (lum - 0.22) / (0.62 - 0.22)));
+  const k = t * t * (3 - 2 * t);
+  for (let c = 0; c < 3; c++) light[i + c] = Math.round(ink[c] * (1 - k) + gold[c] * k);
 }
 
 const make = (buf: Buffer) =>

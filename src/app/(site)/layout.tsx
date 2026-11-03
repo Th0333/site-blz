@@ -13,7 +13,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
   const logoLight = mediaUrl(s.logoLightId);
   return (
     <MotionProvider>
-      <SiteHeader studioName={s.studioName} logo={logo} user={user ? { name: user.name, role: user.role } : null} />
+      <SiteHeader studioName={s.studioName} logo={logo} logoLight={logoLight} user={user ? { name: user.name, role: user.role } : null} />
       <main id="conteudo" className="flex-1">
         {children}
       </main>

@@ -30,7 +30,7 @@ function isOverDarkSection() {
   });
 }
 
-export function SiteHeader({ studioName, logo, user }: { studioName: string; logo: string | null; user: HeaderUser }) {
+export function SiteHeader({ studioName, logo, logoLight, user }: { studioName: string; logo: string | null; logoLight: string | null; user: HeaderUser }) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   // a página inicial abre sobre o hero escuro: já começa com texto claro (sem "piscar")
@@ -105,19 +105,22 @@ export function SiteHeader({ studioName, logo, user }: { studioName: string; log
         depth={22}
         strength={48}
       >
-        {/* Logo numa cápsula de vidro leitosa (como o item selecionado de uma toolbar): sempre legível e nas cores originais */}
+        {/* Logo direto sobre o vidro: versão clara em fundos escuros, colorida em fundos claros */}
         <Link
           href="/"
           aria-label={`${studioName} — página inicial`}
-          className={cn(
-            "liquid-glass-rim relative flex shrink-0 items-center justify-center rounded-full bg-white/80 px-5 transition-[height,padding] duration-500 sm:px-6",
-            compact ? "h-[58px]" : "h-[64px] sm:h-[74px]",
-          )}
+          className={cn("relative flex shrink-0 items-center pl-3 transition-[height] duration-500 sm:pl-4", compact ? "h-[58px]" : "h-[64px] sm:h-[74px]")}
         >
           <Wordmark
             name={studioName}
             logo={logo}
-            imgClassName={cn("w-auto max-w-none transition-[height] duration-500", compact ? "h-[54px]" : "h-[60px] sm:h-[70px]")}
+            logoLight={logoLight}
+            tone={light ? "light" : "dark"}
+            imgClassName={cn(
+              "w-auto max-w-none transition-[height,filter] duration-500",
+              compact ? "h-[56px]" : "h-[62px] sm:h-[72px]",
+              light ? "drop-shadow-[0_1px_8px_rgb(0_0_0/0.35)]" : "drop-shadow-[0_1px_4px_rgb(255_255_255/0.6)]",
+            )}
           />
         </Link>
 
