@@ -53,7 +53,9 @@ for (let y = 0; y < Math.min(H, untilY); y++) {
     const i = px(x, y);
     const r = data[i], g = data[i + 1], b = data[i + 2];
     const d = Math.sqrt((r - bg[0]) ** 2 + (g - bg[1]) ** 2 + (b - bg[2]) ** 2);
-    const a = Math.max(0, Math.min(1, (d - tolerance) / soft));
+    // Na ilustração, rosados pálidos (sombra, boca) não podem "furar": recorte mais sensível e transição curta
+    const raw = inArt(x, y) ? Math.max(0, Math.min(1, (d - 14) / 14)) : Math.max(0, Math.min(1, (d - tolerance) / soft));
+    const a = raw < 0.12 ? 0 : raw; // descarta o ruído de compressão do fundo
     if (a <= 0) continue;
     // Remove a "contaminação" do fundo nas bordas semitransparentes
     const un = (c: number, k: number) => Math.max(0, Math.min(255, Math.round((c - bg[k] * (1 - a)) / a)));
@@ -100,7 +102,6 @@ for (let i = 0; i < light.length; i += 4) {
     light[i] = c[0];
     light[i + 1] = c[1];
     light[i + 2] = c[2];
-    if (lum > 0.58) light[i + 3] = Math.round(light[i + 3] * (1 - 0.6 * smooth((lum - 0.58) / 0.3)));
     continue;
   }
   const c = lum < 0.62 ? mix(ink, gold, smooth((lum - 0.28) / (0.62 - 0.28))) : mix(gold, dusk, smooth((lum - 0.62) / (0.9 - 0.62)));
@@ -108,6 +109,19 @@ for (let i = 0; i < light.length; i += 4) {
   light[i + 1] = c[1];
   light[i + 2] = c[2];
   if (lum > 0.7) light[i + 3] = Math.round(light[i + 3] * (1 - 0.45 * smooth((lum - 0.7) / 0.25)));
+}
+
+// Suaviza a granulação da imagem original só na ilustração (evita aspecto manchado na sombra e na boca)
+if (artBox) {
+  const [ax, ay, aw, ah] = artBox;
+  const w = Math.min(aw, W - ax);
+  const h = Math.min(ah, Math.min(H, untilY) - ay);
+  const region = await sharp(light, { raw: { width: W, height: H, channels: 4 } })
+    .extract({ left: ax, top: ay, width: w, height: h })
+    .blur(0.8)
+    .raw()
+    .toBuffer();
+  for (let yy = 0; yy < h; yy++) region.copy(light, ((ay + yy) * W + ax) * 4, yy * w * 4, (yy + 1) * w * 4);
 }
 
 const make = (buf: Buffer) =>
