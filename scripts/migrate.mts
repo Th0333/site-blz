@@ -10,7 +10,7 @@ if (!url) {
   console.log("DATABASE_URL não definida — o PGlite local aplica as migrações automaticamente ao iniciar.");
   process.exit(0);
 }
-const pool = new Pool({ connectionString: url, ssl: /sslmode=require|supabase|neon/.test(url) ? { rejectUnauthorized: false } : undefined });
+const pool = new Pool({ connectionString: url, ssl: /sslmode=/.test(url) ? undefined : /supabase|neon/.test(url) ? { rejectUnauthorized: false } : undefined });
 await migrate(drizzle(pool), { migrationsFolder: path.join(process.cwd(), "drizzle") });
 console.log("Migrações aplicadas.");
 await pool.end();

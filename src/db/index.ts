@@ -34,7 +34,8 @@ async function open(): Promise<DB> {
     const pool = new Pool({
       connectionString: url,
       max: Number(process.env.DATABASE_POOL_MAX ?? 5),
-      ssl: /sslmode=require|supabase|neon/.test(url) ? { rejectUnauthorized: false } : undefined,
+      // sslmode na URL tem prioridade; sem ele, Supabase/Neon usam TLS
+      ssl: /sslmode=/.test(url) ? undefined : /supabase|neon/.test(url) ? { rejectUnauthorized: false } : undefined,
     });
     holder.close = () => pool.end();
     return drizzle(pool, { schema }) as unknown as DB;

@@ -1,0 +1,9 @@
+# Hospedagem provisória na Netlify (Next.js detectado automaticamente pelo adaptador OpenNext).
+# As migrações do banco são aplicadas antes do build (scripts/migrate.mts usa DATABASE_URL).
+[build]
+  command = "npm run build:deploy"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"

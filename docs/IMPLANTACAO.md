@@ -30,7 +30,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 
 ## 3. Build e migrações
 
-Na Vercel, defina o **Build Command** como `npm run vercel-build`. Ele aplica as migrações e depois faz o build. Em outra hospedagem:
+Na Vercel, defina o **Build Command** como `npm run build:deploy`. Ele aplica as migrações e depois faz o build. Em outra hospedagem:
 
 ```bash
 npm ci
