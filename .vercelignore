@@ -1,0 +1,7 @@
+# Nunca enviar à Vercel: banco local, credenciais e variáveis
+.data
+.env*
+!.env.example
+.netlify
+.next
+node_modules
