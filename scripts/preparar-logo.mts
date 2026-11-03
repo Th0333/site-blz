@@ -71,6 +71,47 @@ for (let y = 0; y < Math.min(H, untilY); y++) {
     }
   }
 }
+// Preenche furos pequenos e totalmente cercados na ilustração (ex.: brilho na pálpebra quase da cor do fundo).
+// Áreas transparentes ligadas à borda da região (pele, espaço entre cílios) continuam abertas.
+if (artBox) {
+  const [ax, ay, aw, ah] = artBox;
+  const w = Math.min(aw, W - ax);
+  const h = Math.min(ah, Math.min(H, untilY) - ay);
+  const open = new Uint8Array(w * h);
+  for (let yy = 0; yy < h; yy++) for (let xx = 0; xx < w; xx++) open[yy * w + xx] = out[px(ax + xx, ay + yy) + 3] < 235 ? 1 : 0;
+  const seen = new Uint8Array(w * h);
+  const stack: number[] = [];
+  for (let k = 0; k < w * h; k++) {
+    if (!open[k] || seen[k]) continue;
+    // componente conexa de pixels transparentes
+    const comp: number[] = [];
+    let touchesEdge = false;
+    stack.push(k);
+    seen[k] = 1;
+    while (stack.length) {
+      const c = stack.pop()!;
+      comp.push(c);
+      const cx = c % w;
+      const cy = (c / w) | 0;
+      if (cx === 0 || cy === 0 || cx === w - 1 || cy === h - 1) touchesEdge = true;
+      for (const n of [c - 1, c + 1, c - w, c + w]) {
+        if (n < 0 || n >= w * h || seen[n] || !open[n]) continue;
+        if ((n === c - 1 && cx === 0) || (n === c + 1 && cx === w - 1)) continue;
+        seen[n] = 1;
+        stack.push(n);
+      }
+    }
+    if (touchesEdge || comp.length > 600) continue;
+    for (const c of comp) {
+      const i = px(ax + (c % w), ay + ((c / w) | 0));
+      out[i] = data[i];
+      out[i + 1] = data[i + 1];
+      out[i + 2] = data[i + 2];
+      out[i + 3] = 255;
+    }
+  }
+}
+
 if (maxX <= minX) {
   console.error("Não encontrei o desenho: a imagem parece ser só fundo.");
   process.exit(1);
