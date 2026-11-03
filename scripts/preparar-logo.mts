@@ -6,6 +6,7 @@
  *   npm run logo:preparar -- --arquivo "C:\caminho\logo.png" [--nome "Flavia Melo"] [--tagline "Makeup artist"]
  *   npm run logo:preparar -- --arquivo logo.png --so-previa      (só gera as prévias em .data/logo/)
  *   --ate-y 966     ignora tudo abaixo dessa linha da imagem (ex.: remover um slogan pequeno demais)
+ *   --arte x,y,l,a  região de ilustração (ex.: o rosto) com conversão própria na versão clara, preservando cílios e contornos
  *
  * Com --so-previa nada é gravado no banco. Sem ele, as versões são salvas no banco
  * (DATABASE_URL) e aplicadas nas configurações do estúdio.
@@ -29,6 +30,9 @@ const tolerance = Number(arg("tolerancia") ?? 26); // distância de cor consider
 const soft = 34; // faixa de transição suave nas bordas
 const onlyPreview = process.argv.includes("--so-previa");
 const untilY = arg("ate-y") ? Number(arg("ate-y")) : Infinity;
+// Região de ilustração (ex.: rosto) com tratamento próprio na versão clara: "x,y,largura,altura" da imagem original
+const artBox = arg("arte")?.split(",").map(Number) as [number, number, number, number] | undefined;
+const inArt = (x: number, y: number) => !!artBox && x >= artBox[0] && y >= artBox[1] && x < artBox[0] + artBox[2] && y < artBox[1] + artBox[3];
 
 const { data, info } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 const { width: W, height: H } = info;
@@ -72,17 +76,38 @@ if (maxX <= minX) {
 const pad = Math.round(Math.max(maxX - minX, maxY - minY) * 0.03);
 const crop = { left: Math.max(0, minX - pad), top: Math.max(0, minY - pad), width: Math.min(W, maxX + pad) - Math.max(0, minX - pad), height: Math.min(H, maxY + pad) - Math.max(0, minY - pad) };
 
-// Versão clara (para vidro/fundos escuros) em DOIS TONS, espelhando a original:
-// partes escuras (vinho) viram quase branco; partes médias/claras (rosé, traços) viram rosé-dourado claro.
+// Versão clara (para vidro/fundos escuros): inverte a relação de tons da original.
+// Escuros (letras vinho, cílios, contornos) -> quase branco; médios (rosé, traços) -> rosé-dourado claro;
+// muito claros (sombra da pálpebra, brilhos) -> rosé fechado e translúcido, para os detalhes escuros
+// da original (cílios, vinco do olho) continuarem se destacando.
 const light = Buffer.from(out);
 const ink = [253, 244, 242]; // off-white rosado
 const gold = [242, 196, 184]; // rosé-dourado claro
+const dusk = [201, 138, 132]; // rosé fechado
+const mix = (a: number[], b: number[], t: number) => a.map((v, k) => Math.round(v * (1 - t) + b[k] * t));
+const smooth = (t: number) => {
+  const c = Math.max(0, Math.min(1, t));
+  return c * c * (3 - 2 * c);
+};
 for (let i = 0; i < light.length; i += 4) {
   if (!light[i + 3]) continue;
-  const lum = (0.2126 * light[i] + 0.7152 * light[i + 1] + 0.0722 * light[i + 2]) / 255;
-  const t = Math.max(0, Math.min(1, (lum - 0.22) / (0.62 - 0.22)));
-  const k = t * t * (3 - 2 * t);
-  for (let c = 0; c < 3; c++) light[i + c] = Math.round(ink[c] * (1 - k) + gold[c] * k);
+  // tom percebido na imagem ORIGINAL (antes de remover o fundo), que é o que o olho vê
+  const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
+  const p = i / 4;
+  if (inArt(p % W, Math.floor(p / W))) {
+    // ilustração: traços escuros (cílios, contornos) brilham; preenchimentos pálidos (sombra, pele) recuam
+    const c = lum < 0.3 ? ink : mix(gold, dusk, smooth((lum - 0.3) / 0.3));
+    light[i] = c[0];
+    light[i + 1] = c[1];
+    light[i + 2] = c[2];
+    if (lum > 0.58) light[i + 3] = Math.round(light[i + 3] * (1 - 0.6 * smooth((lum - 0.58) / 0.3)));
+    continue;
+  }
+  const c = lum < 0.62 ? mix(ink, gold, smooth((lum - 0.28) / (0.62 - 0.28))) : mix(gold, dusk, smooth((lum - 0.62) / (0.9 - 0.62)));
+  light[i] = c[0];
+  light[i + 1] = c[1];
+  light[i + 2] = c[2];
+  if (lum > 0.7) light[i + 3] = Math.round(light[i + 3] * (1 - 0.45 * smooth((lum - 0.7) / 0.25)));
 }
 
 const make = (buf: Buffer) =>

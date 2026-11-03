@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="handle" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#4a0a16"/>
+      <stop offset="1" stop-color="#8b1022"/>
+    </linearGradient>
+    <linearGradient id="ferrule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b9735f"/>
+      <stop offset="0.45" stop-color="#f6d3c4"/>
+      <stop offset="1" stop-color="#c4846f"/>
+    </linearGradient>
+    <linearGradient id="bristles" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#d9818f"/>
+      <stop offset="1" stop-color="#fdeef0"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="#052f32"/>
+  <!-- pó de blush -->
+  <circle cx="50" cy="13" r="2.4" fill="#f3b6c0" opacity="0.9"/>
+  <circle cx="55" cy="20" r="1.6" fill="#f3b6c0" opacity="0.7"/>
+  <circle cx="44" cy="8" r="1.4" fill="#f3b6c0" opacity="0.6"/>
+  <!-- pincel na diagonal -->
+  <g transform="rotate(42 32 32) translate(0 3)">
+    <rect x="28.4" y="35" width="7.2" height="25" rx="3.6" fill="url(#handle)"/>
+    <path d="M27.2 27 H36.8 L35.4 36 H28.6 Z" fill="url(#ferrule)"/>
+    <path d="M27.2 27 C 23.5 19, 24.5 9.5, 32 5 C 39.5 9.5, 40.5 19, 36.8 27 Z" fill="url(#bristles)"/>
+    <path d="M30 26 C 28.6 19, 29.2 13, 31.2 8.5 M34 26 C 35.4 19, 34.8 13, 32.8 8.5" stroke="#c9707f" stroke-width="0.9" stroke-linecap="round" fill="none" opacity="0.55"/>
+  </g>
+</svg>
