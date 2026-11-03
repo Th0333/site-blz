@@ -9,11 +9,14 @@ import { cn } from "@/lib/utils";
  * do elemento (forte perto da borda, nulo no centro), aplicado via backdrop-filter.
  *
  * - Chromium (Chrome, Edge, Opera): refração real + leve aberração cromática.
- * - Safari/Firefox ou "reduzir transparência/movimento": vidro limpo com desfoque, sem refração.
+ * - Safari (iPhone), Firefox ou "reduzir transparência/movimento": vidro em camadas — centro límpido,
+ *   bordas mais densas e brilhantes (simulam a espessura da lente) e reflexo especular. Sem SVG.
+ * Em desenvolvimento, `?vidro=fosco` na URL força o modo sem refração para testar o visual do iPhone.
  */
 
 function supportsRefraction() {
   if (typeof navigator === "undefined") return false;
+  if (process.env.NODE_ENV !== "production" && new URLSearchParams(window.location.search).get("vidro") === "fosco") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce)").matches) return false;
   const brands = (navigator as Navigator & { userAgentData?: { brands: { brand: string }[] } }).userAgentData?.brands;
   return !!brands?.some((b) => b.brand === "Chromium");
@@ -126,16 +129,25 @@ export function LiquidGlass({
   }, [size, radius, depth]);
 
   const useMap = refract && map && size;
-  const backdrop = useMap
-    ? `blur(${blur}px) url(#${id}) saturate(165%) brightness(1.05)`
-    : `blur(${fallbackBlur}px) saturate(165%) brightness(1.05)`;
+  // Com refração, o próprio elemento filtra o fundo; sem ela, as camadas internas fazem o trabalho
+  const backdrop = useMap ? `blur(${blur}px) url(#${id}) saturate(165%) brightness(1.05)` : undefined;
+  void fallbackBlur;
 
   return (
     <Tag
       ref={ref as never}
       className={cn("liquid-glass-rim relative isolate", className)}
-      style={{ ...style, borderRadius: radius, background: tint, backdropFilter: backdrop, WebkitBackdropFilter: backdrop }}
+      style={{ ...style, borderRadius: radius, backdropFilter: backdrop, WebkitBackdropFilter: backdrop }}
     >
+      {!useMap && (
+        <>
+          <span aria-hidden className="lg-layer lg-frost" />
+          <span aria-hidden className="lg-layer lg-edge" />
+          <span aria-hidden className="lg-layer lg-edge-strong" />
+        </>
+      )}
+      <span aria-hidden className="lg-layer" style={{ background: tint }} />
+      <span aria-hidden className="lg-layer lg-shine" />
       {useMap && (
         <svg aria-hidden width="0" height="0" className="pointer-events-none absolute">
           <filter id={id} x="0" y="0" width={size.w} height={size.h} filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">

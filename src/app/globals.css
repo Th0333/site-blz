@@ -263,7 +263,54 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
+  /* Camadas do vidro (ver components/site/liquid-glass.tsx) */
+  .lg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  /* centro: quase límpido, só realça cor e luz do que está atrás */
+  .lg-frost {
+    -webkit-backdrop-filter: blur(5px) saturate(190%) brightness(1.06);
+    backdrop-filter: blur(5px) saturate(190%) brightness(1.06);
+  }
+  /* bordas: mais densas e claras, como a espessura de uma lente de vidro */
+  .lg-edge,
+  .lg-edge-strong {
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .lg-edge {
+    display: none;
+  }
+  .lg-edge-strong {
+    padding: 3px;
+    -webkit-backdrop-filter: blur(20px) saturate(140%) brightness(1.5);
+    backdrop-filter: blur(20px) saturate(140%) brightness(1.5);
+  }
+  /* reflexo especular curvo no topo, luz lateral e brilho fraco na base */
+  .lg-shine {
+    background:
+      radial-gradient(120% 95% at 50% -42%, rgb(255 255 255 / 0.34), rgb(255 255 255 / 0) 62%),
+      radial-gradient(38% 140% at 0% 0%, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0) 55%),
+      radial-gradient(30% 120% at 100% 100%, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 60%),
+      linear-gradient(to top, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 38%);
+    /* brilho interno esfumado (espessura do vidro) + leve sombra na base */
+    box-shadow:
+      inset 0 0 18px -4px rgb(255 255 255 / 0.32),
+      inset 0 1px 10px -6px rgb(255 255 255 / 0.6),
+      inset 0 -8px 14px -10px rgb(5 47 50 / 0.28);
+  }
+
   @media (prefers-reduced-transparency: reduce) {
+    .lg-frost,
+    .lg-edge,
+    .lg-edge-strong {
+      display: none;
+    }
     .liquid-glass-rim {
       background: rgb(246 242 241 / 0.97) !important;
       -webkit-backdrop-filter: none !important;
