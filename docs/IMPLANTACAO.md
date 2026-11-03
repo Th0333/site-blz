@@ -39,15 +39,17 @@ npm run build
 npm start
 ```
 
-## Hospedagem provisória atual: Netlify + Neon
+## Hospedagem provisória atual: Vercel + Neon (São Paulo)
 
-Enquanto a cliente não compra o domínio, o site roda em **https://site-blz.netlify.app**:
+Enquanto a cliente não compra o domínio, o site roda em **https://site-blz.vercel.app**:
 
-- **Netlify (plano grátis):** build a partir do GitHub (`Th0333/site-blz`, branch `main`) com o `netlify.toml` do projeto. No plano grátis as funções rodam em Ohio (us-east-2); escolher São Paulo exige plano Pro.
-- **Neon (plano grátis):** banco PostgreSQL também em Ohio (`aws-us-east-2`), ao lado das funções, para cada consulta não atravessar o continente.
-- **Restrição do plano grátis:** a Netlify só faz build de repositório **privado** para autores reconhecidos como membros da conta; por isso o repositório é público (não há segredos no código).
-- **Publicar sob controle:** cada push na `main` gera um deploy (e consome créditos). Para enviar ao GitHub sem publicar, pause em *Project configuration → Build & deploy → Stop builds* e reative quando quiser publicar.
+- **Vercel:** funções na região **gru1 (São Paulo)**, definida no `vercel.json`. Build com migrações (`npm run build:deploy`).
+- **Neon:** banco PostgreSQL em **aws-sa-east-1 (São Paulo)**, projeto `site-blz-sp`, ao lado das funções.
+- **Publicação manual:** o `vercel.json` desliga o deploy automático pelo Git. Para publicar, a partir de uma cópia limpa do repositório: `vercel deploy --prod`. O `.vercelignore` impede o envio de `.data/` e `.env`.
+- **Plano:** o Hobby da Vercel é só para uso pessoal/não comercial. Antes de a cliente usar o site de verdade (agendamentos e pagamentos reais), migre o projeto para o plano **Pro**.
+- **Mercado Pago:** a URL do webhook passa a ser `https://site-blz.vercel.app/api/webhooks/mercadopago` (o assistente do painel já mostra a URL correta).
 - **Logotipo:** aplicado no banco com `npm run logo:preparar -- --arquivo logo/flavia-melo.webp --ate-y 966 --nome "Flavia Melo"` (com `DATABASE_URL` apontando para o banco desejado).
+- **Hospedagem anterior (Netlify, Ohio):** `site-blz.netlify.app`, com builds pausados; era mais lenta porque o plano grátis só roda em Ohio.
 
 ## 4. Primeiro administrador (com segurança)
 
