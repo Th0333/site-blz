@@ -8,7 +8,7 @@ export function SiteFooter({ s, logo, logoLight }: { s: StudioSettings; logo: st
   const ig = instagramLink(s.instagram);
   const year = new Date().getFullYear();
   return (
-    <footer className="grain bg-petrol text-[#d9e7e6]">
+    <footer data-nav="dark" className="grain bg-petrol text-[#d9e7e6]">
       <div className="mx-auto grid max-w-[1320px] gap-12 px-4 pb-10 pt-16 sm:px-6 md:grid-cols-12 lg:px-10">
         <div className="md:col-span-5">
           <Wordmark name={s.studioName} logo={logo} logoLight={logoLight} tone="light" imgClassName="h-20 max-w-[260px]" />

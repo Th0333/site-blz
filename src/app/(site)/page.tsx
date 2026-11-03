@@ -84,7 +84,7 @@ export default async function HomePage() {
       </section>
 
       {/* Sobre */}
-      <section id="sobre" className="scroll-mt-24 grain overflow-hidden bg-teal-deep py-24 text-white sm:py-32">
+      <section id="sobre" data-nav="dark" className="scroll-mt-24 grain overflow-hidden bg-teal-deep py-24 text-white sm:py-32">
         <div className="mx-auto grid max-w-[1320px] gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:px-10">
           <Reveal className="lg:col-span-5">
             <div className="relative aspect-[4/5] w-full max-w-md">

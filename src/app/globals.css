@@ -230,61 +230,44 @@
     transform-origin: left;
   }
   /*
-   * Liquid Glass (inspirado no material da Apple): vidro claro com desfoque e saturação,
-   * borda que capta luz, brilho especular e — em navegadores Chromium — leve refração
-   * do que passa por trás (filtro SVG #liquid-glass, ver components/site/liquid-glass.tsx).
+   * Liquid Glass (estilo Apple): o componente LiquidGlass cuida da transparência e da refração;
+   * aqui ficam o aro de luz fino e o brilho especular que dão volume ao vidro.
    */
-  .liquid-glass {
-    position: relative;
-    isolation: isolate;
-    background:
-      linear-gradient(135deg, rgb(255 255 255 / 0.78), rgb(246 242 241 / 0.62) 55%, rgb(241 227 228 / 0.7));
-    -webkit-backdrop-filter: blur(26px) saturate(180%) brightness(1.06);
-    backdrop-filter: blur(26px) saturate(180%) brightness(1.06);
-    border: 1px solid rgb(255 255 255 / 0.6);
+  .liquid-glass-rim {
     box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.9),
-      inset 0 -1px 0 rgb(255 255 255 / 0.35),
-      inset 0 0 22px rgb(255 255 255 / 0.28),
-      0 18px 40px -18px rgb(5 47 50 / 0.45),
-      0 2px 8px rgb(5 47 50 / 0.08);
+      inset 0 1px 1px rgb(255 255 255 / 0.75),
+      inset 0 -1px 1px rgb(255 255 255 / 0.22),
+      inset 1px 0 1px rgb(255 255 255 / 0.18),
+      inset -1px 0 1px rgb(255 255 255 / 0.18),
+      0 10px 30px -12px rgb(0 0 0 / 0.35),
+      0 1px 3px rgb(0 0 0 / 0.08);
   }
-  .liquid-glass[data-refract="true"] {
-    -webkit-backdrop-filter: blur(22px) url(#liquid-glass) saturate(180%) brightness(1.06);
-    backdrop-filter: blur(22px) url(#liquid-glass) saturate(180%) brightness(1.06);
-  }
-  /* brilho especular: luz entrando pelo canto superior esquerdo */
-  .liquid-glass::before {
+  .liquid-glass-rim::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
     border-radius: inherit;
     pointer-events: none;
-    background:
-      radial-gradient(90% 160% at 12% -40%, rgb(255 255 255 / 0.75), transparent 52%),
-      radial-gradient(60% 120% at 96% 140%, rgb(255 255 255 / 0.35), transparent 60%);
-    opacity: 0.85;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 46%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.08));
   }
-  /* aro de luz na borda (gradiente que simula a espessura do vidro) */
-  .liquid-glass::after {
+  .liquid-glass-rim::after {
     content: "";
     position: absolute;
-    inset: -1px;
+    inset: 0;
     border-radius: inherit;
     pointer-events: none;
     padding: 1px;
-    background: linear-gradient(160deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.15) 40%, rgb(196 90 104 / 0.25) 75%, rgb(255 255 255 / 0.7));
+    background: linear-gradient(120deg, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0.12) 30%, rgb(255 255 255 / 0.05) 55%, rgb(255 255 255 / 0.55) 85%, rgb(255 255 255 / 0.9));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
   @media (prefers-reduced-transparency: reduce) {
-    .liquid-glass,
-    .liquid-glass[data-refract="true"] {
-      background: rgb(246 242 241 / 0.97);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
+    .liquid-glass-rim {
+      background: rgb(246 242 241 / 0.97) !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
     }
   }
 

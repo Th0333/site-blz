@@ -51,7 +51,7 @@ export function Hero({
   ].filter(Boolean);
 
   return (
-    <section ref={ref} className="grain relative overflow-hidden bg-petrol text-white">
+    <section ref={ref} data-nav="dark" className="grain relative overflow-hidden bg-petrol text-white">
       {/* halo merlot por trás da fotografia */}
       <div aria-hidden className="pointer-events-none absolute -right-40 top-10 h-[620px] w-[620px] rounded-full bg-[radial-gradient(closest-side,rgba(112,26,46,0.75),transparent)] blur-2xl" />
       <div className="relative mx-auto grid min-h-[100svh] max-w-[1320px] grid-cols-1 items-end gap-10 px-4 pb-14 pt-32 sm:px-6 sm:pt-36 lg:grid-cols-12 lg:items-center lg:gap-6 lg:px-10 lg:pb-20 lg:pt-40">
