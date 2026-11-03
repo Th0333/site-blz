@@ -15,6 +15,13 @@
       "when": 1793716147503,
       "tag": "0001_booking_overlap_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793719355352,
+      "tag": "0002_username_login",
+      "breakpoints": true
     }
   ]
 }

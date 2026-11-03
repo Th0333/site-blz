@@ -1,12 +1,13 @@
 # Testes
 
-`npm test` roda 30 testes automatizados (Vitest) em um PostgreSQL real em memória (PGlite), com as mesmas migrações e constraints de produção.
+`npm test` roda 32 testes automatizados (Vitest) em um PostgreSQL real em memória (PGlite), com as mesmas migrações e constraints de produção.
 
 | Arquivo | Cobre |
 | --- | --- |
 | `tests/engine.test.ts` | Fuso America/Sao_Paulo; jornada, pausa, preparação, bloqueios e antecedência no motor de horários |
 | `tests/bookings.test.ts` | Calendário, concorrência, constraint do banco, "qualquer profissional", pagamento no dia, preço congelado, expiração, isolamento entre clientes, políticas |
 | `tests/payments.test.ts` | Regras financeiras (aprovado, recusado, reembolso, divergência, aprovado após expiração), resumo financeiro, assinatura do webhook |
+| `tests/auth.test.ts` | Cadastro público não define papel nem usuário; login por nome de usuário |
 | `tests/mercadopago.test.ts` | Checkout Pro com a API do Mercado Pago simulada: corpo do pedido, idempotência, webhook assinado e duplicado, assinatura inválida, retorno do checkout |
 
 ## Os 18 testes obrigatórios

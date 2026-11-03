@@ -30,6 +30,8 @@ export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
+  /** Login alternativo ao e-mail (ex.: "admin"). Definido só pelo script de administração. */
+  username: text("username").unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
   createdAt: ts("created_at").notNull().defaultNow(),

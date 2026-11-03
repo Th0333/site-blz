@@ -10,7 +10,8 @@ export function authErrorMessage(err: { code?: string; status?: number; message?
   if (err.status === 429) return "Muitas tentativas em sequência. Aguarde um minuto e tente de novo.";
   switch (err.code) {
     case "INVALID_EMAIL_OR_PASSWORD":
-      return "E-mail ou senha incorretos.";
+    case "INVALID_USERNAME_OR_PASSWORD":
+      return "Usuário/e-mail ou senha incorretos.";
     case "USER_ALREADY_EXISTS":
     case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
       return "Já existe uma conta com este e-mail. Entre ou recupere sua senha.";

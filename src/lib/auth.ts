@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { username } from "better-auth/plugins";
 import { getDb } from "@/db";
 import * as schema from "@/db/schema";
 import { appUrl } from "@/lib/env";
@@ -62,6 +63,8 @@ async function createAuth() {
       max: 100,
       customRules: {
         "/sign-in/email": { window: 60, max: 5 },
+        "/sign-in/username": { window: 60, max: 5 },
+        "/is-username-available": { window: 60, max: 10 },
         "/sign-up/email": { window: 300, max: 5 },
         "/request-password-reset": { window: 300, max: 3 },
         "/forget-password": { window: 300, max: 3 },
@@ -74,7 +77,8 @@ async function createAuth() {
     databaseHooks: {
       user: {
         create: {
-          before: async (u) => ({ data: { ...u, role: "client", acceptedTermsAt: new Date() } }),
+          // Cadastro público: sempre cliente e sem nome de usuário (usuários são definidos só pelo script)
+          before: async (u) => ({ data: { ...u, role: "client", username: null, acceptedTermsAt: new Date() } }),
           after: async (u) => {
             const { emitEvent } = await import("@/server/events");
             await emitEvent({
@@ -87,7 +91,7 @@ async function createAuth() {
         },
       },
     },
-    plugins: [nextCookies()],
+    plugins: [username({ displayUsername: false, minUsernameLength: 3, maxUsernameLength: 40 }), nextCookies()],
   });
 }
 

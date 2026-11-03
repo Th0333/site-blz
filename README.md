@@ -14,7 +14,7 @@ O nome padrão "Atelier Carmim" é provisório: nome, logotipo, textos, fotos, c
 | Autenticação | Better Auth (e-mail e senha, recuperação, confirmação de e-mail opcional, limite de tentativas) |
 | Pagamentos | API oficial do Mercado Pago: `POST /v1/orders`, webhooks assinados e consulta `GET /v1/orders/{id}` |
 | Fotos | Otimizadas no upload (WebP, `sharp`) e guardadas no banco: persistem entre deploys |
-| Testes | Vitest (30 testes), mais o roteiro manual em [docs/TESTES.md](docs/TESTES.md) |
+| Testes | Vitest (32 testes), mais o roteiro manual em [docs/TESTES.md](docs/TESTES.md) |
 
 Interface em português do Brasil, valores em BRL e fuso `America/Sao_Paulo`.
 
@@ -24,7 +24,7 @@ Interface em português do Brasil, valores em BRL e fuso `America/Sao_Paulo`.
 npm install
 cp .env.example .env.local        # preencha BETTER_AUTH_SECRET e APP_ENCRYPTION_KEY
 npm run seed:demo                 # opcional: conteúdo de DEMONSTRAÇÃO (marcado e removível)
-npm run admin:create -- --email voce@estudio.com.br --name "Seu Nome"
+npm run admin:create -- --email voce@estudio.com.br --name "Seu Nome" --username admin
 npm run dev
 ```
 
@@ -40,7 +40,7 @@ Sem `DATABASE_URL`, o banco local é um PostgreSQL embarcado em `./.data/pglite`
 | `npm run typecheck` / `npm run lint` | Verificações estáticas |
 | `npm run db:migrate` | Aplica migrações no PostgreSQL de `DATABASE_URL` |
 | `npm run db:generate` | Gera migração após alterar `src/db/schema.ts` |
-| `npm run admin:create` | Cria ou promove a administradora (ou `--role professional`) |
+| `npm run admin:create` | Cria ou promove a administradora (`--username admin` para entrar só com "admin", `--nova-senha` para trocar a senha, `--role professional`) |
 | `npm run seed:demo` | Carrega conteúdo de demonstração |
 
 ## Documentação

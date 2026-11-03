@@ -20,11 +20,12 @@ export function SignInForm({ next }: { next: string }) {
     const fd = new FormData(e.currentTarget);
     setPending(true);
     setError(null);
-    const { error } = await authClient.signIn.email({
-      email: String(fd.get("email")).trim(),
-      password: String(fd.get("password")),
-      rememberMe: true,
-    });
+    const login = String(fd.get("login")).trim();
+    const password = String(fd.get("password"));
+    // Com "@" entra por e-mail; sem "@", por nome de usuário (ex.: conta "admin")
+    const { error } = login.includes("@")
+      ? await authClient.signIn.email({ email: login, password, rememberMe: true })
+      : await authClient.signIn.username({ username: login, password, rememberMe: true });
     if (error) {
       setError(authErrorMessage(error));
       setPending(false);
@@ -37,8 +38,8 @@ export function SignInForm({ next }: { next: string }) {
   return (
     <form onSubmit={onSubmit} className="mt-8 space-y-5" noValidate>
       <FormError message={error} />
-      <Field id="email" label="E-mail">
-        <Input id="email" name="email" type="email" autoComplete="email" required inputMode="email" />
+      <Field id="login" label="E-mail ou usuário">
+        <Input id="login" name="login" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} required />
       </Field>
       <Field id="password" label="Senha">
         <Input id="password" name="password" type="password" autoComplete="current-password" required />

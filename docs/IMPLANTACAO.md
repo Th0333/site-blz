@@ -44,11 +44,14 @@ npm start
 Não existe cadastro público de administradores. O papel `role` não pode ser enviado pelo formulário de cadastro: ele é forçado como `client` no servidor. Para criar o primeiro acesso, rode **uma vez**, de um computador com acesso ao banco de produção:
 
 ```bash
-DATABASE_URL="postgres://..." npm run admin:create -- --email dona@estudio.com.br --name "Nome Completo"
+DATABASE_URL="postgres://..." npm run admin:create -- --email dona@estudio.com.br --name "Nome Completo" --username admin
 ```
 
 - O script pede a senha no terminal, sem eco e sem gravar no histórico. Sem terminal interativo, gera uma senha forte e a exibe uma única vez.
 - Se o e-mail já tiver conta de cliente, ela é **promovida** e a senha atual é mantida.
+- Com `--username admin`, o login pode ser feito digitando apenas **admin** (ou o e-mail). Nomes de usuário só podem ser definidos por este script: o cadastro público ignora esse campo.
+- Para trocar a senha de uma conta existente: acrescente `--nova-senha`. Pelo site, use *Minha conta → Alterar senha*.
+- **Não use senhas fracas como "admin"**: o painel dá acesso a dados pessoais das clientes (LGPD).
 - Para dar acesso de profissional: `--role professional`. Depois, vincule o e-mail no cadastro da profissional pelo painel.
 - A operação fica registrada na auditoria.
 
