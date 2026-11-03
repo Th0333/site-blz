@@ -67,7 +67,7 @@ function PairList({ names, labels, initial, placeholders }: { names: [string, st
   );
 }
 
-export function SettingsForms({ s, images, demo, mpConfigured, emailOn }: { s: StudioSettings; images: Record<"logoId" | "heroImageId" | "heroSecondaryImageId" | "aboutImageId", string | null>; demo: boolean; mpConfigured: boolean; emailOn: boolean }) {
+export function SettingsForms({ s, images, demo, mpConfigured, emailOn }: { s: StudioSettings; images: Record<"logoId" | "logoLightId" | "heroImageId" | "heroSecondaryImageId" | "aboutImageId", string | null>; demo: boolean; mpConfigured: boolean; emailOn: boolean }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   return (
@@ -79,14 +79,15 @@ export function SettingsForms({ s, images, demo, mpConfigured, emailOn }: { s: S
       </nav>
 
       <Section id="identidade" title="Identidade">
-        <div className="grid gap-4 md:grid-cols-[1fr_220px]">
+        <div className="grid gap-4 md:grid-cols-[1fr_200px_200px]">
           <div className="grid gap-4">
             <Field id="studioName" label="Nome do estúdio"><Input id="studioName" name="studioName" defaultValue={s.studioName} required maxLength={80} /></Field>
             <Field id="tagline" label="Frase de apoio" hint="Aparece no rodapé e nos resultados de busca."><Input id="tagline" name="tagline" defaultValue={s.tagline} maxLength={120} /></Field>
           </div>
-          <ImageInput name="logoId" current={images.logoId} label="Logotipo (opcional)" aspect="aspect-[3/2]" />
+          <ImageInput name="logoId" current={images.logoId} label="Logotipo (fundos claros)" aspect="aspect-[3/2]" />
+          <ImageInput name="logoLightId" current={images.logoLightId} label="Logotipo (fundos escuros)" aspect="aspect-[3/2]" className="[&_label]:bg-petrol" />
         </div>
-        <p className="mt-3 text-xs text-muted-foreground">Sem logotipo, o site usa um logotipo tipográfico com o nome do estúdio.</p>
+        <p className="mt-3 text-xs text-muted-foreground">Use PNG com fundo transparente. Sem logotipo, o site usa um logotipo tipográfico com o nome do estúdio. Sem a versão para fundos escuros, a versão normal é usada.</p>
       </Section>
 
       <Section id="inicio" title="Página inicial">

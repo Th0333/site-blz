@@ -17,7 +17,7 @@ export default async function AuthLayout({ children }: LayoutProps<"/">) {
           <div className="absolute inset-0 bg-gradient-to-b from-[#052f32]/70 via-[#052f32]/30 to-[#340b17]/90" />
           <div className="relative flex h-full flex-col justify-between p-12">
             <Link href="/" aria-label="Voltar ao site">
-              <Wordmark name={s.studioName} logo={mediaUrl(s.logoId)} tone="light" />
+              <Wordmark name={s.studioName} logo={mediaUrl(s.logoId)} logoLight={mediaUrl(s.logoLightId)} tone="light" imgClassName="h-16 max-w-[240px]" />
             </Link>
             <p className="display max-w-md text-[3.4rem] leading-[0.98]">
               Seu horário, <span className="italic text-[#f3b6c0]">do seu jeito.</span>

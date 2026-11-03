@@ -20,10 +20,9 @@ export const metadata: Metadata = { title: "Minha conta", robots: { index: false
 
 export default async function MyAccountPage() {
   const u = await requireUserPage("/minha-conta");
-  await expireStaleHolds();
   const db = await getDb();
-  const s = await getSettings();
   const now = new Date();
+  const [s] = await Promise.all([getSettings(), expireStaleHolds()]);
 
   const list = await db
     .select({ b: bookings, pro: professionals.displayName })
@@ -32,10 +31,12 @@ export default async function MyAccountPage() {
     .where(eq(bookings.clientId, u.id))
     .orderBy(desc(bookings.startsAt));
   const ids = list.map((l) => l.b.id);
-  const pays = ids.length ? await db.select().from(payments).where(inArray(payments.bookingId, ids)).orderBy(desc(payments.createdAt)) : [];
-  const reviewed = ids.length ? await db.select({ id: testimonials.bookingId }).from(testimonials).where(inArray(testimonials.bookingId, ids)) : [];
+  const [pays, reviewed, notes] = await Promise.all([
+    ids.length ? db.select().from(payments).where(inArray(payments.bookingId, ids)).orderBy(desc(payments.createdAt)) : Promise.resolve([]),
+    ids.length ? db.select({ id: testimonials.bookingId }).from(testimonials).where(inArray(testimonials.bookingId, ids)) : Promise.resolve([]),
+    db.select().from(events).where(eq(events.userId, u.id)).orderBy(desc(events.createdAt)).limit(8),
+  ]);
   const reviewedSet = new Set(reviewed.map((r) => r.id));
-  const notes = await db.select().from(events).where(eq(events.userId, u.id)).orderBy(desc(events.createdAt)).limit(8);
   const unread = notes.filter((n) => !n.readAt).length;
 
   const upcoming = list.filter((l) => l.b.startsAt > now && ["pending_payment", "scheduled", "confirmed"].includes(l.b.status)).reverse();

@@ -17,6 +17,8 @@ export const settingsSchema = z.object({
   studioName: z.string().trim().min(1).max(80).default("Atelier Carmim"),
   tagline: z.string().trim().max(120).default("Beauty studio · maquiagem & beleza"),
   logoId: z.string().uuid().nullable().default(null),
+  /** Versão clara do logotipo, usada sobre fundos escuros (hero, rodapé, painel) */
+  logoLightId: z.string().uuid().nullable().default(null),
 
   // Página inicial
   heroEyebrow: z.string().trim().max(80).default("Estúdio de beleza autoral"),

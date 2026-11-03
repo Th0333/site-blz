@@ -3,7 +3,7 @@ import type { StudioSettings } from "@/lib/settings-schema";
 import { instagramLink, whatsappLink } from "@/lib/media-url";
 import { Wordmark } from "./wordmark";
 
-export function SiteFooter({ s, logo }: { s: StudioSettings; logo: string | null }) {
+export function SiteFooter({ s, logo, logoLight }: { s: StudioSettings; logo: string | null; logoLight: string | null }) {
   const wa = whatsappLink(s.whatsapp, `Olá! Vim pelo site do ${s.studioName}.`);
   const ig = instagramLink(s.instagram);
   const year = new Date().getFullYear();
@@ -11,7 +11,7 @@ export function SiteFooter({ s, logo }: { s: StudioSettings; logo: string | null
     <footer className="grain bg-petrol text-[#d9e7e6]">
       <div className="mx-auto grid max-w-[1320px] gap-12 px-4 pb-10 pt-16 sm:px-6 md:grid-cols-12 lg:px-10">
         <div className="md:col-span-5">
-          <Wordmark name={s.studioName} logo={logo} tone="light" />
+          <Wordmark name={s.studioName} logo={logo} logoLight={logoLight} tone="light" imgClassName="h-20 max-w-[260px]" />
           <p className="mt-5 max-w-sm text-[0.95rem] leading-relaxed text-[#b6cfcd]">{s.tagline}</p>
           <Link href="/agendar" className="mt-8 inline-flex items-center gap-3 font-display text-2xl italic text-white">
             Reserve seu horário

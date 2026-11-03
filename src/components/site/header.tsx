@@ -20,7 +20,7 @@ const NAV = [
 
 type HeaderUser = { name: string; role: string } | null;
 
-export function SiteHeader({ studioName, logo, user, overHero = false }: { studioName: string; logo: string | null; user: HeaderUser; overHero?: boolean }) {
+export function SiteHeader({ studioName, logo, logoLight, user, overHero = false }: { studioName: string; logo: string | null; logoLight: string | null; user: HeaderUser; overHero?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -67,7 +67,7 @@ export function SiteHeader({ studioName, logo, user, overHero = false }: { studi
       </a>
       <div className="mx-auto flex h-[72px] max-w-[1320px] items-center gap-6 px-4 sm:px-6 lg:px-10">
         <Link href="/" className="shrink-0" aria-label={`${studioName} — página inicial`}>
-          <Wordmark name={studioName} logo={logo} tone={dark ? "light" : "dark"} />
+          <Wordmark name={studioName} logo={logo} logoLight={logoLight} tone={dark ? "light" : "dark"} />
         </Link>
 
         <nav aria-label="Principal" className="ml-auto hidden items-center gap-7 lg:flex">

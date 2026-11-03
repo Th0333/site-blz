@@ -5,9 +5,24 @@ import { cn } from "@/lib/utils";
  * Logotipo tipográfico gerado a partir do nome do estúdio (didone + itálico na última palavra).
  * Quando a administradora envia um logotipo, ele substitui o wordmark.
  */
-export function Wordmark({ name, logo, tone = "dark", className }: { name: string; logo?: string | null; tone?: "dark" | "light"; className?: string }) {
-  if (logo) {
-    return <img src={logo} alt={name} className={cn("h-9 w-auto max-w-[180px] object-contain", className)} />;
+export function Wordmark({
+  name,
+  logo,
+  logoLight,
+  tone = "dark",
+  className,
+  imgClassName,
+}: {
+  name: string;
+  logo?: string | null;
+  logoLight?: string | null;
+  tone?: "dark" | "light";
+  className?: string;
+  imgClassName?: string;
+}) {
+  const src = tone === "light" ? (logoLight ?? logo) : logo;
+  if (src) {
+    return <img src={src} alt={name} className={cn("h-12 w-auto max-w-[200px] object-contain", imgClassName)} />;
   }
   const words = name.trim().split(/\s+/);
   const last = words.length > 1 ? words.pop() : null;

@@ -13,7 +13,8 @@
     "db:migrate": "tsx --env-file-if-exists=.env.local scripts/migrate.mts",
     "seed:demo": "tsx --env-file-if-exists=.env.local scripts/seed-demo.mts",
     "admin:create": "tsx --env-file-if-exists=.env.local scripts/create-admin.mts",
-    "build:deploy": "tsx scripts/migrate.mts && next build"
+    "build:deploy": "tsx scripts/migrate.mts && next build",
+    "logo:preparar": "tsx --env-file-if-exists=.env.local scripts/preparar-logo.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

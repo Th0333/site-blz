@@ -3,6 +3,7 @@
  * Servem para visualizar a experiência antes de cadastrar os dados reais do estúdio.
  * A administradora remove tudo com um clique em Configurações.
  */
+import { cache } from "react";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { bookings, faqs, galleryItems, media, professionals, serviceProfessionals, services, testimonials, workingHours } from "@/db/schema";
@@ -10,7 +11,7 @@ import { getSettings, saveSettings } from "./settings";
 
 const U = (id: string, w = 1400) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
 
-export async function hasDemoData() {
+export const hasDemoData = cache(async function hasDemoData() {
   const db = await getDb();
   const res = (await db.execute(sql`
     select (select count(*) from services where is_demo) + (select count(*) from professionals where is_demo)
@@ -18,7 +19,7 @@ export async function hasDemoData() {
          + (select count(*) from faqs where is_demo) as n`)) as unknown as { rows?: Array<{ n: number }> } | Array<{ n: number }>;
   const r = Array.isArray(res) ? res[0] : res.rows?.[0];
   return Number(r?.n ?? 0) > 0;
-}
+});
 
 export async function seedDemo(actorId: string | null) {
   const db = await getDb();
@@ -118,7 +119,7 @@ export async function removeDemoData() {
   const demoMedia = await db.select({ id: media.id }).from(media).where(eq(media.isDemo, true));
   const demoIds = new Set(demoMedia.map((m) => m.id));
   const patch: Record<string, null> = {};
-  for (const k of ["heroImageId", "heroSecondaryImageId", "aboutImageId", "logoId"] as const) if (s[k] && demoIds.has(s[k]!)) patch[k] = null;
+  for (const k of ["heroImageId", "heroSecondaryImageId", "aboutImageId", "logoId", "logoLightId"] as const) if (s[k] && demoIds.has(s[k]!)) patch[k] = null;
   if (Object.keys(patch).length) await saveSettings(patch, null);
   await db.delete(media).where(and(eq(media.isDemo, true), sql`not exists (select 1 from professionals p where p.photo_id = media.id)`));
 }

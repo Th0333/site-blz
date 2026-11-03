@@ -55,6 +55,8 @@ async function createAuth() {
     session: {
       expiresIn: 60 * 60 * 24 * 30,
       updateAge: 60 * 60 * 24,
+      // Sessão em cookie assinado por 5 min: evita uma ida ao banco a cada página
+      cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
     rateLimit: {
       enabled: process.env.NODE_ENV === "production" || process.env.AUTH_RATE_LIMIT === "1",

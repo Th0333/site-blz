@@ -14,7 +14,7 @@ const TEXT_FIELDS = [
   "address", "mapsUrl", "whatsapp", "instagram", "email", "phone", "cancellationPolicy", "privacyPolicy", "termsOfUse",
 ] as const;
 const NUM_FIELDS = ["slotIntervalMin", "minNoticeHours", "maxDaysAhead", "holdMinutes", "cancelMinHours", "rescheduleMinHours"] as const;
-const IMAGE_FIELDS = ["logoId", "heroImageId", "heroSecondaryImageId", "aboutImageId"] as const;
+const IMAGE_FIELDS = ["logoId", "logoLightId", "heroImageId", "heroSecondaryImageId", "aboutImageId"] as const;
 
 export async function saveSettingsAction(form: FormData) {
   return toResult(async () => {

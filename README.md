@@ -8,7 +8,7 @@ O nome padrão "Atelier Carmim" é provisório: nome, logotipo, textos, fotos, c
 
 | Camada | Escolha |
 | --- | --- |
-| App | Next.js 16 (App Router, Server Actions, `proxy.ts`), React 19, TypeScript |
+| App | Next.js 16 (App Router, Server Actions), React 19, TypeScript |
 | Interface | Tailwind CSS 4, shadcn/ui (Base UI), `motion`, componentes de Magic UI e Cult UI, efeitos adaptados de Aceternity, Animata, Kokonut, Skiper e outros (ver [docs/DESIGN.md](docs/DESIGN.md)) |
 | Banco | PostgreSQL (Supabase, Neon...) com Drizzle ORM e migrações. Em desenvolvimento, PostgreSQL embarcado (PGlite) |
 | Autenticação | Better Auth (e-mail e senha, recuperação, confirmação de e-mail opcional, limite de tentativas) |

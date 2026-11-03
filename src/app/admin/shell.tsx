@@ -37,7 +37,7 @@ const NAV = [
   { href: "/admin/configuracoes/mercado-pago", label: "Integração Mercado Pago", icon: CreditCard },
 ];
 
-export function AdminShell({ studioName, userName, children }: { studioName: string; userName: string; children: React.ReactNode }) {
+export function AdminShell({ studioName, userName, logoLight, children }: { studioName: string; userName: string; logoLight: string | null; children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -93,7 +93,7 @@ export function AdminShell({ studioName, userName, children }: { studioName: str
       <div className="min-h-svh bg-[#f3efee] lg:grid lg:grid-cols-[264px_1fr]">
         <aside className="grain sticky top-0 hidden h-svh flex-col gap-8 overflow-y-auto bg-sidebar p-5 lg:flex">
           <Link href="/admin" className="px-2 pt-2">
-            <Wordmark name={studioName} tone="light" className="[&>span]:text-[1.25rem]" />
+            <Wordmark name={studioName} logo={logoLight} tone="light" className="[&>span]:text-[1.25rem]" imgClassName="h-14 max-w-[200px]" />
             <span className="eyebrow mt-1 block text-[0.6rem] text-teal-haze">Painel administrativo</span>
           </Link>
           {nav}
@@ -101,7 +101,7 @@ export function AdminShell({ studioName, userName, children }: { studioName: str
         </aside>
 
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between bg-sidebar px-4 text-white lg:hidden">
-          <Link href="/admin"><Wordmark name={studioName} tone="light" className="[&>span]:text-[1.15rem]" /></Link>
+          <Link href="/admin"><Wordmark name={studioName} logo={logoLight} tone="light" className="[&>span]:text-[1.15rem]" imgClassName="h-10" /></Link>
           <button onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-label={open ? "Fechar menu" : "Abrir menu"} className="grid size-11 place-items-center rounded-full hover:bg-white/10">
             {open ? <X className="size-6" /> : <Menu className="size-6" />}
           </button>

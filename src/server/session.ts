@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
@@ -15,14 +16,14 @@ export type SessionUser = {
   emailVerified: boolean;
 };
 
-export async function getSessionUser(): Promise<SessionUser | null> {
+export const getSessionUser = cache(async function getSessionUser(): Promise<SessionUser | null> {
   const auth = await getAuth();
   const s = await auth.api.getSession({ headers: await headers() });
   if (!s) return null;
   const u = s.user as typeof s.user & { role?: string; phone?: string | null };
   const role: Role = u.role === "admin" || u.role === "professional" ? u.role : "client";
   return { id: u.id, name: u.name, email: u.email, role, phone: u.phone ?? null, emailVerified: u.emailVerified };
-}
+});
 
 export class AuthError extends Error {
   constructor(

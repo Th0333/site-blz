@@ -22,7 +22,7 @@ export default async function SettingsPage() {
       />
       <SettingsForms
         s={s}
-        images={{ logoId: mediaUrl(s.logoId), heroImageId: mediaUrl(s.heroImageId), heroSecondaryImageId: mediaUrl(s.heroSecondaryImageId), aboutImageId: mediaUrl(s.aboutImageId) }}
+        images={{ logoId: mediaUrl(s.logoId), logoLightId: mediaUrl(s.logoLightId), heroImageId: mediaUrl(s.heroImageId), heroSecondaryImageId: mediaUrl(s.heroSecondaryImageId), aboutImageId: mediaUrl(s.aboutImageId) }}
         demo={demo}
         mpConfigured={!!mp.accessToken}
         emailOn={emailConfigured()}

@@ -12,7 +12,6 @@ src/
   db/              schema Drizzle + conexão (PostgreSQL ou PGlite)
   server/          regras de negócio (agendamentos, disponibilidade, pagamentos, Mercado Pago, finanças...)
   components/      UI (shadcn + componentes da marca)
-  proxy.ts         barreira otimista para rotas protegidas
 drizzle/           migrações SQL (inclui a constraint anti-sobreposição)
 scripts/           migrar, criar admin, demonstração
 tests/             Vitest
@@ -68,7 +67,7 @@ O índice único `(payment_id, kind)` impede contar duas vezes. O índice parcia
 
 ## Segurança
 
-- Verificação de sessão e papel no servidor em toda página e ação: `requireUser`, `requireAdmin`. O `proxy.ts` é só uma barreira otimista.
+- Verificação de sessão e papel no servidor em toda página e ação: `requireUser`, `requireAdmin` (sem middleware: cada rota protegida checa a sessão, o que evita um salto extra por navegação).
 - O cadastro público nunca define `role`: o campo tem `input: false` e um hook força `client`.
 - Validação com zod em todas as entradas. Redirecionamentos `next` aceitam apenas caminhos internos.
 - Limite de tentativas de login, cadastro e recuperação (Better Auth, armazenado no banco; ativo em produção).
