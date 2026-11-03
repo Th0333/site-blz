@@ -39,6 +39,16 @@ npm run build
 npm start
 ```
 
+## Hospedagem provisória atual: Netlify + Neon
+
+Enquanto a cliente não compra o domínio, o site roda em **https://site-blz.netlify.app**:
+
+- **Netlify (plano grátis):** build a partir do GitHub (`Th0333/site-blz`, branch `main`) com o `netlify.toml` do projeto. No plano grátis as funções rodam em Ohio (us-east-2); escolher São Paulo exige plano Pro.
+- **Neon (plano grátis):** banco PostgreSQL também em Ohio (`aws-us-east-2`), ao lado das funções, para cada consulta não atravessar o continente.
+- **Restrição do plano grátis:** a Netlify só faz build de repositório **privado** para autores reconhecidos como membros da conta; por isso o repositório é público (não há segredos no código).
+- **Publicar sob controle:** cada push na `main` gera um deploy (e consome créditos). Para enviar ao GitHub sem publicar, pause em *Project configuration → Build & deploy → Stop builds* e reative quando quiser publicar.
+- **Logotipo:** aplicado no banco com `npm run logo:preparar -- --arquivo logo/flavia-melo.webp --ate-y 966 --nome "Flavia Melo"` (com `DATABASE_URL` apontando para o banco desejado).
+
 ## 4. Primeiro administrador (com segurança)
 
 Não existe cadastro público de administradores. O papel `role` não pode ser enviado pelo formulário de cadastro: ele é forçado como `client` no servidor. Para criar o primeiro acesso, rode **uma vez**, de um computador com acesso ao banco de produção:
