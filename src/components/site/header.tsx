@@ -65,9 +65,9 @@ export function SiteHeader({ studioName, logo, logoLight, user, overHero = false
       <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-paper focus:px-4 focus:py-2 focus:text-petrol">
         Pular para o conteúdo
       </a>
-      <div className="mx-auto flex h-[72px] max-w-[1320px] items-center gap-6 px-4 sm:px-6 lg:px-10">
+      <div className={cn("mx-auto flex max-w-[1320px] items-center gap-6 px-4 transition-[height] duration-500 sm:px-6 lg:px-10", logo && !scrolled && !open ? "h-[88px] sm:h-[100px]" : "h-[72px]")}>
         <Link href="/" className="shrink-0" aria-label={`${studioName} — página inicial`}>
-          <Wordmark name={studioName} logo={logo} logoLight={logoLight} tone={dark ? "light" : "dark"} />
+          <Wordmark name={studioName} logo={logo} logoLight={logoLight} tone={dark ? "light" : "dark"} imgClassName={cn("w-auto max-w-none transition-[height] duration-500", scrolled || open ? "h-[58px]" : "h-[72px] sm:h-[84px]")} />
         </Link>
 
         <nav aria-label="Principal" className="ml-auto hidden items-center gap-7 lg:flex">
